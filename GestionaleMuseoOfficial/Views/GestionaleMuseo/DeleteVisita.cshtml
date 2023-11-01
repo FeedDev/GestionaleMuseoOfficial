@@ -1,0 +1,69 @@
+﻿@model GestionaleMuseoOfficial.Models.Visite
+
+@{
+    ViewBag.Title = "DeleteVisita";
+}
+
+<div>
+    <div class="greenBG containerTitle w-100 mb-0">
+        <h4><a href="/GestionaleMuseo/Index" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Sei sicuro di voler eliminare la seguente visita @Model.Titolo ?</h4>
+    </div>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Titolo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TariffaOrdinaria)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImmagineLocandina)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataInizio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataFine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroMaxBiglietti)
+            </th>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Titolo)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(model => model.TariffaOrdinaria)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.ImmagineLocandina)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.DataInizio)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.DataFine)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.NumeroMaxBiglietti)
+            </td>
+
+        </tr>
+    </table>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <center>
+            <div class="form-actions no-color">
+                <input type="submit" value="Elimina" class="removeBtn" />
+            </div>
+        </center>
+
+    }
+</div>

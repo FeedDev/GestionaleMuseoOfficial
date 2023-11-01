@@ -1,0 +1,150 @@
+﻿@model GestionaleMuseoOfficial.Models.Biglietti
+
+@{
+    ViewBag.Title = "CreateBiglietto";
+}
+
+
+@if (TempData["Errore"] != null)
+{
+    <div class="alert alert-danger tempDataMargin">
+        <p>@TempData["Errore"]</p>
+    </div>
+}
+
+
+<center>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal containerDetails  fw-bold w-50">
+            <div class="greenBG containerTitle w-100 mb-0">
+                <h4><a href="/GestionaleMuseo/ViewListaBiglietti" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Crea un nuovo biglietto</h4>
+            </div>
+            <p class="my-3"></p>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            
+            <div class="col-6">
+                <div class="form-group my-2">
+                    @Html.LabelFor(model => model.DataValidita, "Data validità", htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DataValidita, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                        @Html.ValidationMessageFor(model => model.DataValidita, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group my-2">
+                    @Html.LabelFor(model => model.IdVisita, "Nome visita", htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("IdVisita", ViewBag.IdVisita as SelectList, "-- Seleziona una visita --", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IdVisita, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group my-2">
+                    @Html.LabelFor(model => model.IdCategorieVisitatori, "Categoria visitatore", htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-12">
+                        @Html.DropDownList("IdCategorieVisitatori", ViewBag.IdCategorieVisitatori as SelectList, "-- Seleziona una categoria visitatore --", new { @class = "form-control"})
+                        @Html.ValidationMessageFor(model => model.IdCategorieVisitatori, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group my-2">
+                    @Html.LabelFor(model => model.PrezzoTotale, "Prezzo totale", htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PrezzoTotale, new { htmlAttributes = new { @class = "form-control", id = "prezzoTotale", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.PrezzoTotale, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group my-2">
+                    @Html.LabelFor(model => model.IdCliente, "Nominativo", htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("IdCliente", ViewBag.IdCliente as SelectList, "-- Seleziona un cliente --", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IdCliente, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Aggiungi" class="generalBtn my-4" />
+                </div>
+            </div>
+        </div>
+     }
+</center>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            console.log($('#IdVisita option:selected').text())
+
+            $('#IdVisita').on("change", function () {
+
+                var idVisita = $('#IdVisita').val()
+                console.log("IDVISITA", idVisita)
+                if (idVisita !== null && idVisita !== undefined) {
+                    $.ajax({
+                        url: '@Url.Action("GetTariffaOrdinaria", "GestionaleMuseo")',
+                        type: 'GET',
+                        data: { 'id': idVisita },
+                        success: function (response) {
+                            if (response > 0) {
+                                var tariffaOrdinaria = response;
+                                $('#prezzoTotale').val(tariffaOrdinaria);
+                            } else {
+                                alert('Si è verificato un errore durante il recupero della tariffa ordinaria.');
+                            }
+                        },
+                        error: function () {
+                            alert('Si è verificato un errore durante la richiesta.');
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,53 @@
+﻿@model GestionaleMuseoOfficial.Models.Clienti
+
+@{
+    ViewBag.Title = "DeleteCliente";
+}
+
+<div>
+    <div class="greenBG containerTitle w-100 mb-0">
+        <h4><a href="/GestionaleMuseo/ViewListaClieti" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Sei sicuro di voler eliminare il seguente cliente @Model.Nome @Model.Cognome ?</h4>
+    </div>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cognome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AltroDettaglio)
+            </th>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Cognome)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.AltroDettaglio)
+            </td>
+        </tr>
+    </table>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <center>
+            <div class="form-actions no-color">
+                <input type="submit" value="Elimina" class="removeBtn" />
+            </div>
+        </center>
+
+    }
+</div>

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<GestionaleMuseoOfficial.Models.CategorieVisitatori>
+
+@{
+    ViewBag.Title = "ViewListaCategoriaVisitatori";
+}
+
+
+<br />
+<br />
+<br />
+<p class="text-center">
+    <a href="@Url.Action("CreateCategoriaVisitatore")" class="generalBtn">Crea nuova categoria</a>
+</p>
+<div class="containerDetails mt-5">
+
+    <table class="table table-striped">
+        <thead class="greenBG">
+            <tr class="containerTitle">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descrizione)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TipoDocumento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PercentualeSconto)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descrizione)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoDocumento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PercentualeSconto)%
+                    </td>
+                    <td>
+                        @Html.ActionLink("Modifica", "EditCategoriaVisitatore", new { id = item.IdCategorieVisitatori }, new { @class = "generalBtn" })
+                        @*@Html.ActionLink("Elimina", "DeleteCategoriaVisitatore", new { id = item.IdCategorieVisitatori })*@
+                        <a href="@Url.Action("DeleteCategoriaVisitatore", new { id = item.IdCategorieVisitatori })" data-id="@item.IdCategorieVisitatori" class="generalBtn delete-link">Elimina</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            // Gestisci il click sul link di eliminazione
+            $("a.delete-link").click(function () {
+                var deleteUrl = $(this).attr("href"); // Ottieni l'URL di eliminazione
+                var confirmation = confirm("Sei sicuro di voler eliminare questa categoria?"); // Mostra un messaggio di conferma
+
+                // Se l'utente conferma l'eliminazione
+                if (confirmation) {
+                    $.ajax({
+                        url: deleteUrl, // Esegui la chiamata DELETE all'URL di eliminazione
+                        type: "POST",
+                        data: { id: $(this).data("id") }, // Passa l'ID del biglietto da eliminare
+                        success: function () {
+                            // Se l'eliminazione ha avuto successo, ricarica la pagina
+                            location.reload();
+                        },
+                        error: function () {
+                            // In caso di errore, mostra un messaggio di errore
+                            alert("Si è verificato un errore durante l'eliminazione della categoria.");
+                        }
+                    });
+                }
+
+                return false; // Impedisce al link di navigare verso l'URL
+            });
+        });
+
+    </script>
+
+}

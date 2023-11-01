@@ -1,0 +1,51 @@
+﻿@model GestionaleMuseoOfficial.Models.CategorieVisitatori
+
+@{
+    ViewBag.Title = "DeleteCategoriaVisitatore";
+
+    @Html.HiddenFor(model => model.IdCategorieVisitatori)
+}
+
+<div>
+    <div class="greenBG containerTitle w-100 mb-0">
+        <h4><a href="/GestionaleMuseo/ViewListaCategoriaVisitatori" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Sei sicuro di voler eliminare la seguente categoria visitatore @Model.Descrizione ?</h4>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Descrizione)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoDocumento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PercentualeSconto)
+            </th>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Descrizione)
+            </td>
+            <th>
+                @Html.DisplayFor(model => model.TipoDocumento)
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.PercentualeSconto)
+            </td>
+        </tr>
+    </table>
+
+    @using (Html.BeginForm())
+
+    {
+        @Html.AntiForgeryToken()
+
+        <center>
+            <div class="form-actions no-color">
+                <input type="submit" value="Elimina" class="removeBtn" />
+            </div>
+        </center>
+
+    }
+</div>

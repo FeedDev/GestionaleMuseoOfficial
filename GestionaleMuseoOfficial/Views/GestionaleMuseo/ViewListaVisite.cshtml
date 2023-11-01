@@ -1,0 +1,97 @@
+﻿@model IEnumerable<GestionaleMuseoOfficial.Models.Visite>
+
+@{
+    ViewBag.Title = "ViewListaVisite";
+}
+
+@if (TempData["Successo"] != null)
+{
+    <div class="alert alert-success tempDataMargin">
+        <p>@TempData["Successo"]</p>
+    </div>
+}
+
+</br>
+<p class="text-center mt-5">
+    <a href="@Url.Action("CreateVisita")" class="generalBtn containerTitle">Crea visita</a>
+</p>
+
+<div class="container mt-5">
+    <div class="row" id="visiteRow">
+        <div class="col-md-12">
+            <div class="card-deck">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-3 visitaCard">
+                        <div class="card mb-3">
+                            <div class="card-header text-center greenBG cardTitle">
+                                @Html.DisplayFor(modelItem => item.Titolo)
+                            </div>
+
+                            <img class="justify-content-center" src="/Content/image/@item.ImmagineLocandina" height="300" /> @*height="70" class="rounded-2"*@
+
+                            <div class="card-body cardBoy">
+                                <p class="card-text">Tariffa Ordinaria: @Html.DisplayFor(modelItem => item.TariffaOrdinaria) €</p>
+                                <p class="card-text">Data Inizio: @item.DataInizio.ToShortDateString()</p>
+                                <p class="card-text">Data Fine: @item.DataFine.ToShortDateString()</p>
+                                <p class="card-text">Numero Max Biglietti: @Html.DisplayFor(modelItem => item.NumeroMaxBiglietti)</p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-center greenBG">
+                                <div class="btn-group btn-group-block" role="group" aria-label="Card Actions">
+                                    @Html.ActionLink("Modifica", "EditVisita", new { id = item.IdVisita }, new { @class = "btn generalBtn equal-width-btn", style = "width: 100%; text-align: center;" })
+                                    @*@Html.ActionLink("Delete", "DeleteVisita", new { id = item.IdVisita }, new { @class = "btn btn-danger equal-width-btn", style = "width: 100%; text-align: center;" })*@
+                                    @Html.ActionLink("Elimina", "DeleteVisita", new { id = item.IdVisita }, new { @class = "btn generalBtn equal-width-btn delete-link", style = "width: 100%; text-align: center;", data_id = item.IdVisita })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var row = $("#visiteRow");
+            var cards = row.find(".visitaCard");
+
+            // Distribuisce le card in righe di 4 elementi
+            for (var i = 0; i < cards.length; i += 4) {
+                cards.slice(i, i + 4).wrapAll("<div class='row'></div>");
+            }
+        });
+
+        $(document).ready(function () {
+            // Gestisci il click sul link di eliminazione
+            $(document).on("click", "a.delete-link", function (e) {
+                e.preventDefault(); // Impedisce il comportamento predefinito del link
+
+                var deleteUrl = $(this).attr("href"); // Ottieni l'URL di eliminazione
+                var confirmation = confirm("Sei sicuro di voler eliminare questa visita?"); // Mostra un messaggio di conferma
+
+                // Se l'utente conferma l'eliminazione
+                if (confirmation) {
+                    $.ajax({
+                        url: deleteUrl, // Esegui la chiamata DELETE all'URL di eliminazione
+                        type: "POST",
+                        data: { id: $(this).data("id") }, // Passa l'ID del biglietto da eliminare
+                        success: function () {
+                            // Se l'eliminazione ha avuto successo, ricarica la pagina
+                            location.reload();
+                        },
+                        error: function () {
+                            // In caso di errore, mostra un messaggio di errore
+                            alert("Si è verificato un errore durante l'eliminazione della visita.");
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+    </script>
+}

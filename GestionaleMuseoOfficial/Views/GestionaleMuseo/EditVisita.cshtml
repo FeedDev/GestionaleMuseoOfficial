@@ -1,0 +1,92 @@
+﻿@model GestionaleMuseoOfficial.Models.Visite
+
+@{
+    ViewBag.Title = "EditVisita";
+}
+
+<center>
+    @using (Html.BeginForm("EditVisita", "GestionaleMuseo", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal containerDetails  fw-bold w-50">
+            <div class="greenBG containerTitle w-100 mb-0">
+                <h4><a href="/GestionaleMuseo/ViewListaVisite" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Modifica la seguente visita @Model.Titolo</h4>
+            </div>
+            <p class="my-3"></p>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.IdVisita)
+            @Html.HiddenFor(model => model.DataInizio)
+            @Html.HiddenFor(model => model.DataFine)
+
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.Titolo, "Nome visita", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Titolo, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Titolo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.DataInizio, "Data inizio visita", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DataInizio, new { htmlAttributes = new { @class = "form-control", @type="date" } })
+                    @Html.ValidationMessageFor(model => model.DataInizio, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.DataFine, "Data fine visita", htmlAttributes: new { @class = "control-label col-md-4"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DataFine, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                    @Html.ValidationMessageFor(model => model.DataFine, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.Image, "Immagine locandina", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Image, new { @class = "form-control", @type = "file", @accepted = "image/*", @onchange = "loadFile(event)" })
+                    @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-6">
+                <img id="output" height="70" class="rounded-2" src="~/Content/image/@Model.ImmagineLocandina"/>
+            </div>
+
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.NumeroMaxBiglietti, "Numero massimo biglietti", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.NumeroMaxBiglietti, new { htmlAttributes = new { @class = "form-control", @min = "1" } })
+                    @Html.ValidationMessageFor(model => model.NumeroMaxBiglietti, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group my-2">
+                    @Html.LabelFor(model => model.TariffaOrdinaria, "Tariffa ordinaria", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.TariffaOrdinaria, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TariffaOrdinaria, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Salva" class="generalBtn my-4" />
+                </div>
+            </div>
+        </div>
+    }
+</center>
+
+
+
+    <script>
+        var loadFile = function (event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function () {
+                URL.revokeObjectURL(output.src) // free memory
+            }
+        };
+    </script>
+

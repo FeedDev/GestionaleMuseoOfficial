@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - Applicazione ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navBarColor fixed-top mb-5">
+        <div class="container">
+            <a class="navbar-brand" href="#">Museo</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/GestionaleMuseo/ViewListaVisite">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/GestionaleMuseo/ViewListaBiglietti">Biglietti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/GestionaleMuseo/ViewListaClienti">Clienti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/GestionaleMuseo/ViewListaCategoriaVisitatori">Categorie</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/GestionaleMuseo/SignOut">LogOut</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <p class="my-4"></p>
+
+
+    <div class="container body-content">
+        @RenderBody()
+
+
+    </div>
+
+    <footer class="footer fixed-bottom">
+        <p>&copy; @DateTime.Now.Year - Museo</p>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

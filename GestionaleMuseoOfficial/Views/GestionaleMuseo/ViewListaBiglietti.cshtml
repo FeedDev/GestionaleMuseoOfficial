@@ -1,0 +1,261 @@
+﻿@model IEnumerable<GestionaleMuseoOfficial.Models.Biglietti>
+
+@{
+    ViewBag.Title = "ViewListaBiglietti";
+}
+
+@if (TempData["Successo"] != null)
+{
+    <div class="alert alert-success tempDataMargin">
+        <p>@TempData["Successo"]</p>
+    </div>
+}
+
+
+<br />
+<br />
+
+<p class="text-center mt-5">
+    <a href="@Url.Action("CreateBiglietto")" class="generalBtn">Crea biglietto</a>
+</p>
+<center>
+    <div class="containerDetails d-flex flex-row m-2 justify-content-center">
+        <div class="inline-elements m-3">
+
+            <input class="generalBtnForInput" type="date" id="dataInput" />
+            <input type="button" id="btnFiltroData" class="generalBtn" value="Filtra" />
+            <input type="button" id="btnRimuoviFiltro" class="generalBtn" value="Rimuovi Filtro" />
+        </div>
+
+        <div class="justify-content-center d-flex flex-row p-3 gap-2">
+            <label for="nomeVisita"></label>
+            <select id="nomeVisita" class="form-select generalBtn">
+                <option class="generalBtn" value="">Seleziona una visita</option>
+                @foreach (var visita in ViewBag.Visite)
+                {
+                    <option value="@visita.IdVisita">@visita.Titolo</option>
+                }
+            </select>
+            <input class="generalBtnForInput" type="text" id="resultTextBox" placeholder="Biglietti venduti per visita" disabled />
+            <input class="generalBtnForInput" type="text" id="prezzoTotaleTextBox" placeholder="Incasso per visita" disabled />
+        </div>
+    </div>
+</center>
+
+<div class="containerDetails mt-5 marginTable">
+    <table id="bigliettiTable" class="table table-striped">
+        <thead class="greenBG">
+            <tr class="containerTitle">
+                <th>
+                    @Html.DisplayNameFor(model => model.IdBiglietto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Clienti.Nome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Clienti.Cognome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CategorieVisitatori.Descrizione)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visite.Titolo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataValidita)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrezzoTotale)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-id="@item.IdBiglietto">
+                    <th>
+                        @Html.DisplayFor(model => item.IdBiglietto)
+                    </th>
+                    <th>
+                        @Html.DisplayFor(model => item.Clienti.Nome)
+                    </th>
+                    <th>
+                        @Html.DisplayFor(model => item.Clienti.Cognome)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategorieVisitatori.Descrizione)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Visite.Titolo)
+                    </td>
+                    <td>
+                        <p class="card-text">@item.DataValidita.ToShortDateString()</p>
+                    </td>
+                    <td>
+                        <p>@string.Format("{0:C}", item.PrezzoTotale)</p>
+                    </td>
+                    <td>
+                        @Html.ActionLink("Modifica", "EditBiglietto", new { id = item.IdBiglietto }, new { @class = "generalBtn" })
+                        <a href="@Url.Action("DeleteBiglietto", new { id = item.IdBiglietto })" data-id="@item.IdBiglietto" class="generalBtn delete-link">Elimina</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#btnFiltroData').click(function () {
+                var data = $('#dataInput').val();
+                if (data === "") {
+                    // Se la data non è valorizzata, mostra tutte le righe della tabella
+                    $('#bigliettiTable tbody tr').show();
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("FiltroPerData", "GestionaleMuseo")',
+                    type: 'GET',
+                    data: { 'data': data },
+                    success: function (result) {
+                        if (result.error) {
+                            alert(result.error);
+                        } else {
+                            // Rimuove le righe dalla tabella che non corrispondono alla data filtrata
+                            $('#bigliettiTable tbody tr').hide();
+                            $.each(result, function (index, value) {
+                                $('#bigliettiTable tbody tr[data-id="' + value + '"]').show();
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Si è verificato un errore durante la richiesta.");
+                    }
+                });
+            });
+
+            $('#btnRimuoviFiltro').click(function () {
+                // Mostra tutte le righe della tabella
+                $('#bigliettiTable tbody tr').show();
+                // Resetta il valore dell'input data
+                $('#dataInput').val('');
+            });
+
+            $('#nomeVisita').change(function () {
+                var visitaEventoId = $(this).val();
+                if (visitaEventoId === "") {
+                    // Se viene selezionata l'opzione "Seleziona una visita", resetta il valore del resultTextBox e del prezzoTotaleTextBox
+                    $('#resultTextBox').val("");
+                    $('#prezzoTotaleTextBox').val("");
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("GetNumeroBigliettiEmessi", "GestionaleMuseo")',
+                    type: 'GET',
+                    data: { 'visitaEventoId': visitaEventoId },
+                    success: function (result) {
+                        if (result.error) {
+                            alert(result.error);
+                        } else {
+                            $('#resultTextBox').val('Biglietti Venduti: ' + result.numeroBiglietti);
+                            // Calcola il ricavato per la visita evento selezionata
+                            calcolaRicavato(visitaEventoId);
+                        }
+                    },
+                    error: function () {
+                        alert("Si è verificato un errore durante la richiesta.");
+                    }
+                });
+            });
+
+
+            @*$('#nomeVisita').change(function () {
+                var visitaEventoId = $(this).val();
+                $.ajax({
+                    url: '@Url.Action("GetNumeroBigliettiEmessi", "GestionaleMuseo")',
+                    type: 'GET',
+                    data: { 'visitaEventoId': visitaEventoId },
+                    success: function (result) {
+                        if (result.error) {
+                            alert(result.error);
+                        } else {
+                            $('#resultTextBox').val(result.numeroBiglietti);
+                            // Calcola il ricavato per la visita evento selezionata
+                            calcolaRicavato(visitaEventoId);
+                        }
+                    },
+                    error: function () {
+                        alert("Si è verificato un errore durante la richiesta.");
+                    }
+                });
+            });*@
+
+            function calcolaRicavato(visitaEventoId) {
+                $.ajax({
+                    url: '@Url.Action("CalcolaRicavato", "GestionaleMuseo")',
+                    type: 'GET',
+                    data: { 'visitaEventoId': visitaEventoId },
+                    success: function (result) {
+                        if (result.error) {
+                            alert(result.error);
+                        } else {
+                            $('#prezzoTotaleTextBox').val("Ricavato: " + result.toFixed(2) + "€");
+                        }
+                    },
+                    error: function () {
+                        alert("Si è verificato un errore durante il calcolo del ricavato.");
+                    }
+                });
+            }
+        });
+
+
+        $(document).ready(function () {
+            // Gestisci il click sul link di eliminazione
+            $("a.delete-link").click(function () {
+                var deleteUrl = $(this).attr("href"); // Ottieni l'URL di eliminazione
+                var confirmation = confirm("Sei sicuro di voler eliminare questo biglietto?"); // Mostra un messaggio di conferma
+
+                // Se l'utente conferma l'eliminazione
+                if (confirmation) {
+                    $.ajax({
+                        url: deleteUrl, // Esegui la chiamata DELETE all'URL di eliminazione
+                        type: "POST",
+                        data: { id: $(this).data("id") }, // Passa l'ID del biglietto da eliminare
+                        success: function () {
+                            // Se l'eliminazione ha avuto successo, ricarica la pagina
+                            location.reload();
+                        },
+                        error: function () {
+                            // In caso di errore, mostra un messaggio di errore
+                            alert("Si è verificato un errore durante l'eliminazione del biglietto.");
+                        }
+                    });
+                }
+
+                return false; // Impedisce al link di navigare verso l'URL
+            });
+        });
+
+
+
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+

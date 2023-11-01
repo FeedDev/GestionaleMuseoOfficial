@@ -1,0 +1,58 @@
+﻿@model GestionaleMuseoOfficial.Models.Clienti
+
+@{
+    ViewBag.Title = "CreateCliente";
+}
+
+<center>
+    @using (Html.BeginForm())
+     {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal containerDetails  fw-bold w-50">
+            <div class="greenBG containerTitle w-100 mb-0">
+                <h4><a href="/GestionaleMuseo/ViewListaClienti" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Crea un nuovo cliente</h4>
+            </div>
+            <p class="my-3"></p>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.Cognome, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Cognome, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Cognome, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group my-2">
+                @Html.LabelFor(model => model.AltroDettaglio, "Altro dettaglio", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.AltroDettaglio, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AltroDettaglio, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Aggiungi" class="generalBtn my-4" />
+                </div>
+            </div>
+        </div>
+    
+     }
+
+</center>
